@@ -1,6 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
-
+#include <iostream>
+using namespace std;
 template <typename G>
 class Node {
     public:
@@ -14,6 +15,9 @@ class Node {
             this->y=y;
             this->data=data;
         };
+        N get(){
+            return data;
+        }
     private:
         N data;
         double x;

@@ -1,6 +1,7 @@
 #ifndef EDGE_H
 #define EDGE_H
-
+#include <iostream>
+using namespace std;
 #include "node.h"
 
 template <typename G>
@@ -15,6 +16,9 @@ class Edge {
             this->data=data;
             this->dir=dir;
         };
+        E get(){
+            return data;
+        }
     private:
         E data;
         bool dir;

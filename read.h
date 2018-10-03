@@ -15,7 +15,7 @@ class Read {
 	public:
 		Read() {
             // TODO
-            double data;
+            string data;
             ifstream archivo("graph.txt");
             while (!archivo.eof()) {
             archivo >> data;
