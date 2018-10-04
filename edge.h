@@ -16,6 +16,8 @@ class Edge {
             this->data=data;
             this->dir=dir;
         };
+        ~Edge(){
+        };
         E get(){
             return data;
         }

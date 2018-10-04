@@ -12,6 +12,9 @@ int main(int argc, char *argv[]) {
     grafo.Insertar_Aristas(1,2,5,0);
     grafo.Insertar_Aristas(0,2,5,0);
     grafo.print();
+    //grafo.Eliminar_Aristas('0','1');
+    grafo.Eliminar_Nodos('0');
+    grafo.print();
     //read leer;
     system("PAUSE");
     return EXIT_SUCCESS;

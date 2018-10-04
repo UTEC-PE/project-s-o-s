@@ -18,6 +18,8 @@ class Node {
         N get(){
             return data;
         }
+        ~Node(){
+        };
     private:
         N data;
         double x;

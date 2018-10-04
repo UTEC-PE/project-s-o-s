@@ -15,11 +15,20 @@ class Read {
 	public:
 		Read() {
             // TODO
+            int ejex,ejey;
+            char vertice_data;
+            int n_vertices;
+            int v_inicial,v_final,peso;
+            bool direccion;
+            ////////////////
             string data;
+            int aux;
             ifstream archivo("graph.txt");
-            while (!archivo.eof()) {
-            archivo >> data;
-            cout << data << endl;
+            while(getline(archivo, data)) {
+                for(int x=0;x<data.size();x++){
+                    if(data[x]==' '){
+                    }
+                }
             }
             archivo.close();
             system("pause");

@@ -37,6 +37,34 @@ class Graph {
             edge* nueva_arista_2= new edge(nodes[second_node],nodes[first_node],weight,dir);
             nodes[second_node]->edges.push_back(nueva_arista_2);
         };
+        void Eliminar_Aristas(N first_node,N second_node){
+            node* nodo=nodes[int(first_node)-48];
+            for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                if((*ei)->nodes[1]->get()==second_node){
+                    delete (*ei);
+                    ei = nodo->edges.erase(ei);
+                }
+            }
+            nodo=nodes[int(second_node)-48];
+            for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                if((*ei)->nodes[1]->get()==first_node){
+                    delete (*ei);
+                    ei = nodo->edges.erase(ei);
+                }
+            }
+        };
+        void Eliminar_Nodos(N first_node){
+            node* nodo=nodes[int(first_node)-48];
+            for(this->ei=nodo->edges.begin();this->ei!=nodo->edges.end();++this->ei){
+                Eliminar_Aristas(first_node,(*ei)->nodes[1]->get());
+            }
+            /*for (ni=nodes.begin();ni!=nodes.end();++ni){
+                if((*ni)->get()==first_node){
+                    delete (*ni);
+                    nodes.erase(ni);
+                }
+            }*/
+        };
         void print(){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 cout <<(*ni)->get()<<endl;
