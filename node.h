@@ -10,18 +10,18 @@ class Node {
         typedef typename G::edge edge;
         typedef typename G::EdgeSeq EdgeSeq;
         EdgeSeq edges;
-        Node(double x,double y,N data){
+        Node(double x,double y,E data){
             this->x=x;
             this->y=y;
             this->data=data;
         };
-        N get(){
+        E get(){
             return data;
         }
         ~Node(){
         };
     private:
-        N data;
+        E data;
         double x;
         double y;
 };

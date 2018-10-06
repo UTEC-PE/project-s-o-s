@@ -2,6 +2,7 @@
 #define READ_H
 #include <fstream>
 #include "graph.h"
+#include <string>
 
 /**
  * Clase de ayuda para leer el grafo desde un archivo,
@@ -22,16 +23,34 @@ class Read {
             bool direccion;
             ////////////////
             string data;
-            int aux;
+            char node_data;
             ifstream archivo("graph.txt");
-            while(getline(archivo, data)) {
-                for(int x=0;x<data.size();x++){
-                    if(data[x]==' '){
-                    }
+            archivo >> data;
+            graph grafo(stoi(data));
+            archivo >> data;
+            for(int x=0;x<stoi(data);x++){
+                grafo.Insertar_Vertices(0,0,x);
+            }
+            while (!archivo.eof()) {
+            for(int x=0;x<3;x++){
+                archivo >> data;
+                switch(x){
+                case 0:
+                    v_inicial=stoi(data);
+                    break;
+                case 1:
+                    v_final=stoi(data);
+                    break;
+                case 2:
+                    peso=stoi(data);
+                    break;
                 }
+            }
+            grafo.Insertar_Aristas(v_inicial,v_final,peso);
             }
             archivo.close();
             system("pause");
+            grafo.print();
         };
 
 		graph& getGraph() {

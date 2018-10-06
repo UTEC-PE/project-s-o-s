@@ -4,7 +4,7 @@
 
 using namespace std;
 int main(int argc, char *argv[]) {
-    graph grafo(false);
+    /*graph grafo(false);
     grafo.Insertar_Vertices(5,6,'0');
     grafo.Insertar_Vertices(3,4,'1');
     grafo.Insertar_Vertices(6,8,'2');
@@ -16,8 +16,8 @@ int main(int argc, char *argv[]) {
     cout << "//////////////////////////////////" << endl;
     //grafo.Eliminar_Aristas('0','1');
     grafo.Eliminar_Nodos('0');
-    grafo.print();
-    //read leer;
+    grafo.print();*/
+    read leer;
     system("PAUSE");
     return EXIT_SUCCESS;
 }

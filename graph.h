@@ -29,15 +29,27 @@ class Graph {
         Graph(bool option){
             dir=option;
         };
-        void Insertar_Vertices(double ejex,double ejey,N data){
+        void Insertar_Vertices(double ejex,double ejey,E data){
             node* nuevo_nodo= new node(ejex,ejey,data);
             nodes.push_back(nuevo_nodo);
         };
         void Insertar_Aristas(int first_node,int second_node,int weight){
             if(dir == true){
+                node* nodo=nodes[first_node];
+                for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                    if((*ei)->nodes[1]->get()==second_node){
+                        return;
+                    }
+                }
                 edge* nueva_arista_1= new edge(nodes[first_node],nodes[second_node],weight);
                 nodes[first_node]->edges.push_back(nueva_arista_1);
             }else{
+                node* nodo=nodes[first_node];
+                for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                    if((*ei)->nodes[1]->get()==second_node){
+                        return;
+                    }
+                }
                 edge* nueva_arista_1= new edge(nodes[first_node],nodes[second_node],weight);
                 nodes[first_node]->edges.push_back(nueva_arista_1);
                 edge* nueva_arista_2= new edge(nodes[second_node],nodes[first_node],weight);
@@ -46,7 +58,7 @@ class Graph {
         };
         void Eliminar_Aristas(N first_node,N second_node){
             if(dir == true){
-                node* nodo=nodes[int(first_node)-48];
+                node* nodo=nodes[first_node];
                 for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
                     if((*ei)->nodes[1]->get()==second_node){
                         delete (*ei);
@@ -55,7 +67,7 @@ class Graph {
                     }
                 }
             }else{
-                node* nodo=nodes[int(first_node)-48];
+                node* nodo=nodes[first_node];
                 for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
                     if((*ei)->nodes[1]->get()==second_node){
                         delete (*ei);
@@ -63,7 +75,7 @@ class Graph {
                         ei2=ei;
                     }
                 }
-                nodo=nodes[int(second_node)-48];
+                nodo=nodes[second_node];
                 for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
                     if((*ei)->nodes[1]->get()==first_node){
                         delete (*ei);
@@ -72,8 +84,8 @@ class Graph {
                 }
             }
         };
-        void Eliminar_Nodos(N first_node){
-            node* nodo=nodes[int(first_node)-48];
+        void Eliminar_Nodos(E first_node){
+            node* nodo=nodes[first_node];
             for(ei2=nodo->edges.begin();ei2!=nodo->edges.end();++ei2){
                 Eliminar_Aristas(first_node,(*ei2)->nodes[1]->get());
             }
