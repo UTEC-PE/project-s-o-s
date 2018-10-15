@@ -5,7 +5,9 @@
 #include <iostream>
 #include "node.h"
 #include "edge.h"
-
+//////////////////////////////////////
+#include <queue>
+#include <map>
 using namespace std;
 
 class Traits {
@@ -52,8 +54,8 @@ class Graph {
                 }
                 edge* nueva_arista_1= new edge(nodes[first_node],nodes[second_node],weight);
                 nodes[first_node]->edges.push_back(nueva_arista_1);
-                edge* nueva_arista_2= new edge(nodes[second_node],nodes[first_node],weight);
-                nodes[second_node]->edges.push_back(nueva_arista_2);
+                //edge* nueva_arista_2= new edge(nodes[second_node],nodes[first_node],weight);
+                nodes[second_node]->edges.push_back(nueva_arista_1);
             }
         };
         void Eliminar_Aristas(N first_node,N second_node){
@@ -96,6 +98,28 @@ class Graph {
                 }
             }
         };
+        void BFS(){
+            node* nodo = nodes[0];
+            queue<node*> cola;
+            cola.push(nodo);
+            map<E,bool> visitado;
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                visitado[(*ni)->get()]=false;
+            }
+            do{
+                visitado[nodo->get()]=true;
+                for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                    if(visitado.find((*ei)->nodes[1]->get())->second==false){
+                        visitado[(*ei)->nodes[1]->get()]=true;
+                        cola.push((*ei)->nodes[1]);
+                    }
+                }
+                cout << nodo->get() << " ";
+                cola.pop();
+                nodo= cola.front();
+            }
+            while(!cola.empty());
+        }
         void print(){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 cout <<(*ni)->get()<<endl;
@@ -106,6 +130,7 @@ class Graph {
                 }
                 cout <<endl;
             }
+
         }
     private:
         NodeSeq nodes;

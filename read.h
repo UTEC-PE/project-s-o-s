@@ -16,14 +16,9 @@ class Read {
 	public:
 		Read() {
             // TODO
-            int ejex,ejey;
-            char vertice_data;
-            int n_vertices;
             int v_inicial,v_final,peso;
-            bool direccion;
             ////////////////
             string data;
-            char node_data;
             ifstream archivo("graph.txt");
             archivo >> data;
             graph grafo(stoi(data));
@@ -50,7 +45,9 @@ class Read {
             }
             archivo.close();
             system("pause");
-            grafo.print();
+            //grafo.print();
+            //Pasar nodooooo;
+            grafo.BFS();
         };
 
 		graph& getGraph() {
