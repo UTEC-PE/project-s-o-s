@@ -7,6 +7,7 @@
 #include "edge.h"
 //////////////////////////////////////
 #include <queue>
+#include <stack>
 #include <map>
 using namespace std;
 
@@ -106,8 +107,8 @@ class Graph {
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 visitado[(*ni)->get()]=false;
             }
+            visitado[nodo->get()]=true;
             do{
-                visitado[nodo->get()]=true;
                 for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
                     if(visitado.find((*ei)->nodes[1]->get())->second==false){
                         visitado[(*ei)->nodes[1]->get()]=true;
@@ -117,6 +118,37 @@ class Graph {
                 cout << nodo->get() << " ";
                 cola.pop();
                 nodo= cola.front();
+            }
+            while(!cola.empty());
+        }
+        void DFS(){
+            node* nodo = nodes[0];
+            stack<node*> cola;
+            cola.push(nodo);
+            map<E,bool> visitado;
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                visitado[(*ni)->get()]=false;
+            }
+            visitado[nodo->get()]=true;
+            cout << nodo->get() << " ";
+            do{
+                for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                    if(visitado.find((*ei)->nodes[1]->get())->second==false){
+                        visitado[(*ei)->nodes[1]->get()]=true;
+                        cola.push((*ei)->nodes[1]);
+                        nodo = cola.top();
+                        cout << nodo->get() << " ";
+                        break;
+                    }
+                }
+                if(ei==nodo->edges.end()){
+                    cola.pop();
+                    if(!cola.empty()){
+                        nodo= cola.top();
+                    }
+                }
+                /*cola.pop();
+                nodo= cola.top();*/
             }
             while(!cola.empty());
         }

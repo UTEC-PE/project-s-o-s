@@ -47,7 +47,7 @@ class Read {
             system("pause");
             //grafo.print();
             //Pasar nodooooo;
-            grafo.BFS();
+            grafo.DFS();
         };
 
 		graph& getGraph() {
