@@ -47,7 +47,7 @@ class Read {
             system("pause");
             //grafo.print();
             //Pasar nodooooo;
-            grafo.prim();
+            grafo.Bipartito();
         };
 
 		graph& getGraph() {

@@ -31,7 +31,7 @@ class Graph {
         typedef typename EdgeSeq::iterator EdgeIte;
         Graph(bool option){
             dir=option;
-
+            bipartito=true;
         };
         ~Graph(){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
@@ -133,7 +133,8 @@ class Graph {
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 if((*ni)->get()==first_node){
                     delete (*ni);
-                    ni = nodes.erase(ni);
+                    nodes.erase(ni);
+                    break;
                 }
             }
         };
@@ -393,6 +394,15 @@ class Graph {
                 it++;
             }
         }
+        void Bipartito(){
+            //DFS();
+            if(bipartito){
+                cout << "Es bipartito" << endl;
+            }
+            else{
+                cout << "No es bipartito" << endl;
+            }
+        }
         ///////////////////////////////////////////////////////////////////////////////
         void print(){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
@@ -411,6 +421,7 @@ class Graph {
         EdgeIte ei;
         EdgeIte ei2;
         bool dir;
+        bool bipartito;
 };
 typedef Graph<Traits> graph;
 
