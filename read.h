@@ -47,8 +47,7 @@ class Read {
             system("pause");
             //grafo.print();
             //Pasar nodooooo;
-            grafo.Eliminar_Nodos(2);
-            grafo.BFS();
+            grafo.kruskal();
         };
 
 		graph& getGraph() {

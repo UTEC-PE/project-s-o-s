@@ -153,8 +153,12 @@ class Graph {
                         visitado[(*ei)->nodes[1]->get()]=true;
                         cola.push((*ei)->nodes[1]);
                     }
+                    else if(visitado.find((*ei)->nodes[0]->get())->second==false){
+                        visitado[(*ei)->nodes[0]->get()]=true;
+                        cola.push((*ei)->nodes[0]);
+                    }
                 }
-                cout << nodo->get() << " ";
+                //cout << nodo->get() << " ";
                 cola.pop();
                 nodo= cola.front();
             }
@@ -182,6 +186,13 @@ class Graph {
                     if(visitado.find((*ei)->nodes[1]->get())->second==false){
                         visitado[(*ei)->nodes[1]->get()]=true;
                         cola.push((*ei)->nodes[1]);
+                        nodo = cola.top();
+                        cout << nodo->get() << " ";
+                        break;
+                    }
+                    else if(visitado.find((*ei)->nodes[0]->get())->second==false){
+                        visitado[(*ei)->nodes[0]->get()]=true;
+                        cola.push((*ei)->nodes[0]);
                         nodo = cola.top();
                         cout << nodo->get() << " ";
                         break;
@@ -343,13 +354,25 @@ class Graph {
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 visitado[(*ni)->get()]=false;
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
+                    if(visitado.find((*ei)->get())->second==){
+                    visitado[(*it).second->nodes[1]->get()]=true;
+
+                }
                     aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
                 }
             }
+            typename multimap<E,edge*>::iterator it=aristas.begin();
+            /*for(int x=0;x<nodes.size()-1;x++){
+                cout << (*it).second->nodes[0]->get() << (*it).second->nodes[1]->get() << endl;
+                it++;
+            }*/
             for (typename multimap<E,edge*>::iterator it=aristas.begin(); it!=aristas.end(); ++it){
                 if(visitado.find((*it).second->nodes[1]->get())->second==false){
-                    visitado[(*it).second->nodes[0]->get()]=true;
                     visitado[(*it).second->nodes[1]->get()]=true;
+
+                }
+                else if(visitado.find((*it).second->nodes[0]->get())->second==false){
+                    visitado[(*it).second->nodes[0]->get()]=true;
                     cout << (*it).second->nodes[0]->get() << (*it).second->nodes[1]->get() << endl;
                 }
             }
