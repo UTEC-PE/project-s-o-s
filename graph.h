@@ -31,11 +31,19 @@ class Graph {
         typedef typename EdgeSeq::iterator EdgeIte;
         Graph(bool option){
             dir=option;
+
         };
+        ~Graph(){
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                (*ni)->edges.clear();
+            }
+            nodes.clear();
+        }
         void Insertar_Vertices(double ejex,double ejey,E data){
             node* nuevo_nodo= new node(ejex,ejey,data);
             nodes.push_back(nuevo_nodo);
         };
+        ///////////////////////////////////////////////////////////////////////////////
         void Insertar_Aristas(int first_node,int second_node,int weight){
             if(dir == true){
                 node* nodo=nodes[first_node];
@@ -59,30 +67,66 @@ class Graph {
                 nodes[second_node]->edges.push_back(nueva_arista_1);
             }
         };
+        ///////////////////////////////////////////////////////////////////////////////
         void Eliminar_Aristas(N first_node,N second_node){
             edge* temp;
-            node* nodo=nodes[first_node];
-            for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
-                if((*ei)->nodes[1]->get()==second_node){
-                    temp= (*ei);
-                    ei = nodo->edges.erase(ei);
-                    ei2=ei;
-                    break;
-                    }
-            }
             if(dir==false){
+                node* nodo=nodes[first_node];
+                for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                    if((*ei)->nodes[1]->get()==second_node && (*ei)->nodes[0]->get()==first_node){
+                        temp= (*ei);
+                        ei = nodo->edges.erase(ei);
+                        ei2=ei;
+                        break;
+                    }
+                    else if((*ei)->nodes[1]->get()==second_node && (*ei)->nodes[0]->get()==first_node){
+                        temp= (*ei);
+                        ei = nodo->edges.erase(ei);
+                        ei2=ei;
+                        break;
+                    }
+                }
                 nodo=nodes[second_node];
                 for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
-                    if((*ei)->nodes[1]->get()==second_node){
+                    if((*ei)->nodes[1]->get()==second_node && (*ei)->nodes[0]->get()==first_node){
                         ei = nodo->edges.erase(ei);
+                        break;
+                    }
+                    else if((*ei)->nodes[1]->get()==second_node && (*ei)->nodes[0]->get()==first_node){
+                        ei = nodo->edges.erase(ei);
+                        break;
+                    }
+                }
+            }
+            else{
+                node* nodo=nodes[first_node];
+                for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                    if((*ei)->nodes[1]->get()==second_node){
+                        temp= (*ei);
+                        ei = nodo->edges.erase(ei);
+                        ei2=ei;
                         break;
                     }
                 }
             }
             delete temp;
         };
+        ///////////////////////////////////////////////////////////////////////////////
         void Eliminar_Nodos(E first_node){
             node* nodo=nodes[first_node];
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                for(ei2=(*ni)->edges.begin();ei2!=(*ni)->edges.end();++ei2){
+                    if((*ni)->get()==first_node){
+                        break;
+                    }
+                    if((*ei2)->nodes[1]->get()==first_node){
+                        Eliminar_Aristas((*ni)->get(),first_node);
+                    }
+                    else if((*ei2)->nodes[0]->get()==first_node){
+                        Eliminar_Aristas((*ni)->get(),first_node);
+                    }
+                }
+            }
             for(ei2=nodo->edges.begin();ei2!=nodo->edges.end();++ei2){
                 Eliminar_Aristas(first_node,(*ei2)->nodes[1]->get());
             }
@@ -93,6 +137,7 @@ class Graph {
                 }
             }
         };
+        ///////////////////////////////////////////////////////////////////////////////
         bool BFS(){
             node* nodo = nodes[0];
             queue<node*> cola;
@@ -121,6 +166,7 @@ class Graph {
             }
             return true;
         }
+        ///////////////////////////////////////////////////////////////////////////////
         bool DFS(){
             node* nodo = nodes[0];
             stack<node*> cola;
@@ -156,6 +202,7 @@ class Graph {
             }
             return true;
         }
+        ///////////////////////////////////////////////////////////////////////////////
         void conexo(bool option){
             cout << "Los nodos son: ";
             for (ni=nodes.begin();ni!=nodes.end();++ni){
@@ -178,6 +225,7 @@ class Graph {
                 }
             }
         }
+        ///////////////////////////////////////////////////////////////////////////////
         void grado(){
             node* nodo=nodes[0];
             cout << nodo->edges.size() << endl;
@@ -205,6 +253,7 @@ class Graph {
                 }
             }
         }
+        ///////////////////////////////////////////////////////////////////////////////
         void densidad(){
         map<edge*,bool> aristas;
         double cota=0.5;
@@ -240,6 +289,7 @@ class Graph {
             }
         }
         }
+        ///////////////////////////////////////////////////////////////////////////////
         /*void fuertemente_conexo(bool option){
             cout << "Los nodos son: ";
             for (ni=nodes.begin();ni!=nodes.end();++ni){
@@ -262,6 +312,7 @@ class Graph {
                 }
             }
         }*/
+        ///////////////////////////////////////////////////////////////////////////////
         void prim(){
             node* nodo=nodes[0];
             map<E,bool> visitado;
@@ -285,6 +336,7 @@ class Graph {
             }
             while(contador!=visitado.size());
         }
+        ///////////////////////////////////////////////////////////////////////////////
         void kruskal(){
             map<E,bool> visitado;
             multimap<E,edge*> aristas;
@@ -302,6 +354,7 @@ class Graph {
                 }
             }
         }
+        ///////////////////////////////////////////////////////////////////////////////
         void print(){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 cout <<(*ni)->get()<<endl;
