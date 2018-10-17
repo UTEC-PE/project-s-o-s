@@ -327,6 +327,34 @@ class Graph {
         void prim(){
             node* nodo=nodes[0];
             map<E,bool> visitado;
+            int contador=0;
+            multimap<E,edge*> aristas;
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                visitado[(*ni)->get()]=false;
+            }
+            do{
+                visitado[nodo->get()]=true;
+                for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                    if(visitado.find((*ei)->nodes[1]->get())->second==false){
+                        aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
+                    }
+                    else if(visitado.find((*ei)->nodes[0]->get())->second==false){
+                        aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
+                    }
+                }
+                if(visitado.find((aristas.begin()->second)->nodes[1]->get())->second==false){
+                    nodo=(aristas.begin()->second)->nodes[1];
+                }
+                else{
+                    nodo=(aristas.begin()->second)->nodes[0];
+                }
+                contador++;
+                cout << (aristas.begin()->second)->nodes[0]->get() << (aristas.begin()->second)->nodes[1]->get() << endl;
+                aristas.erase(aristas.begin());
+            }
+            while(contador!=visitado.size()-1);
+            /*node* nodo=nodes[0];
+            map<E,bool> visitado;
             visitado[nodo->get()]=true;
             int contador=1;
             multimap<E,edge*> aristas;
@@ -345,36 +373,24 @@ class Graph {
                 cout << (aristas.begin()->second)->nodes[0]->get() << (aristas.begin()->second)->nodes[1]->get() << endl;
                 aristas.erase(aristas.begin());
             }
-            while(contador!=visitado.size());
+            while(contador!=visitado.size());*/
         }
         ///////////////////////////////////////////////////////////////////////////////
         void kruskal(){
-            map<E,bool> visitado;
+            map<edge*,bool> visitado;
             multimap<E,edge*> aristas;
             for (ni=nodes.begin();ni!=nodes.end();++ni){
-                visitado[(*ni)->get()]=false;
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
-                    if(visitado.find((*ei)->get())->second==){
-                    visitado[(*it).second->nodes[1]->get()]=true;
-
-                }
-                    aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
+                    if(visitado.find((*ei))->second==false){
+                        visitado[(*ei)]=true;
+                        aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
+                    }
                 }
             }
             typename multimap<E,edge*>::iterator it=aristas.begin();
-            /*for(int x=0;x<nodes.size()-1;x++){
+            for(int x=0;x<nodes.size()-1;x++){
                 cout << (*it).second->nodes[0]->get() << (*it).second->nodes[1]->get() << endl;
                 it++;
-            }*/
-            for (typename multimap<E,edge*>::iterator it=aristas.begin(); it!=aristas.end(); ++it){
-                if(visitado.find((*it).second->nodes[1]->get())->second==false){
-                    visitado[(*it).second->nodes[1]->get()]=true;
-
-                }
-                else if(visitado.find((*it).second->nodes[0]->get())->second==false){
-                    visitado[(*it).second->nodes[0]->get()]=true;
-                    cout << (*it).second->nodes[0]->get() << (*it).second->nodes[1]->get() << endl;
-                }
             }
         }
         ///////////////////////////////////////////////////////////////////////////////
