@@ -47,6 +47,7 @@ class Read {
             system("pause");
             //grafo.print();
             //Pasar nodooooo;
+            grafo.Eliminar_Nodos(2);
             grafo.DFS();
         };
 
