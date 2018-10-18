@@ -159,7 +159,7 @@ class Graph {
                         cola.push((*ei)->nodes[0]);
                     }
                 }
-                //cout << nodo->get() << " ";
+                cout << nodo->get() << " ";
                 cola.pop();
                 nodo= cola.front();
             }
@@ -354,27 +354,6 @@ class Graph {
                 aristas.erase(aristas.begin());
             }
             while(contador!=visitado.size()-1);
-            /*node* nodo=nodes[0];
-            map<E,bool> visitado;
-            visitado[nodo->get()]=true;
-            int contador=1;
-            multimap<E,edge*> aristas;
-            for (ni=nodes.begin();ni!=nodes.end();++ni){
-                visitado[(*ni)->get()]=false;
-            }
-            do{
-                for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
-                    if(visitado.find((*ei)->nodes[1]->get())->second==false){
-                        aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
-                    }
-                }
-                nodo=(aristas.begin()->second)->nodes[1];
-                visitado[nodo->get()]=true;
-                contador++;
-                cout << (aristas.begin()->second)->nodes[0]->get() << (aristas.begin()->second)->nodes[1]->get() << endl;
-                aristas.erase(aristas.begin());
-            }
-            while(contador!=visitado.size());*/
         }
         ///////////////////////////////////////////////////////////////////////////////
         void kruskal(){
@@ -382,7 +361,7 @@ class Graph {
             multimap<E,edge*> aristas;
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
-                    if(visitado.find((*ei))->second==false){
+                    if(visitado.find((*ei))->second!=true){
                         visitado[(*ei)]=true;
                         aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
                     }
@@ -395,7 +374,27 @@ class Graph {
             }
         }
         void Bipartito(){
-            //DFS();
+            map<edge*,bool> visitado;
+            vector<edge*> aristas;
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
+                    if(visitado.find(*ei)->second==false){
+                        visitado[*ei]=true;
+                        aristas.push_back(*ei);
+                    }
+                }
+            }
+            map<node*,bool> visitado_nodo;
+            for(typename vector<edge*>::iterator it=aristas.begin();it!=aristas.end();++it){
+                cout << (*it)->nodes[0]->get() << (*it)->nodes[1]->get() << endl;
+                if(visitado_nodo.find((*it)->nodes[1])->second==false || visitado_nodo.find((*it)->nodes[0])->second==false){
+                        visitado_nodo[(*it)->nodes[1]]=true;
+                        visitado_nodo[(*it)->nodes[0]]=true;
+                }
+                else{
+                    bipartito=false;
+                }
+            }
             if(bipartito){
                 cout << "Es bipartito" << endl;
             }
@@ -409,8 +408,8 @@ class Graph {
                 cout <<(*ni)->get()<<endl;
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
                     cout <<"peso : " << (*ei)->get();
-                    cout <<" nodo :" << (*ei)->nodes[1]->get();
-                    cout <<" ";
+                    cout <<" arista :" << (*ei)->nodes[0]->get() << (*ei)->nodes[1]->get();
+                    cout <<" - ";
                 }
                 cout <<endl;
             }
