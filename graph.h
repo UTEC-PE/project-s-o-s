@@ -411,7 +411,9 @@ class Graph {
                     }
                     cout << nodo->get() << " ";
                     cola.pop();
+                    if(!cola.empty()){
                     nodo= cola.front();
+                    }
                 }
                 while(!cola.empty());
             }
@@ -442,12 +444,7 @@ class Graph {
         ///////////////////////////////////////////////////////////////////////////////
         bool DFS(E vertice){
             node* nodo;
-            if(fuertemente_conexo){
-                nodo = buscar_nodo(vertice);
-            }
-            else{
-                nodo = buscar_nodo(vertice);
-            }
+            nodo = buscar_nodo(vertice);
             if(nodo==nullptr){
                 cout << "El nodo ingresado no existe :(" << endl;
                 return false;
