@@ -732,7 +732,12 @@ class Graph {
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
                     if(dir){
                         if(visitado.find((*ei)->nodes[1])->first!=(*ei)->nodes[1]){
-                            visitado[(*ei)->nodes[1]]=0;
+                            if(visitado.find((*ei)->nodes[0])->second==0){
+                                visitado[(*ei)->nodes[1]]=1;
+                            }
+                            else{
+                                visitado[(*ei)->nodes[1]]=0;
+                            }
                         }
                     }
                     else{
