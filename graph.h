@@ -668,6 +668,17 @@ class Graph {
             while(contador!=visitado.size()-1);
         }
         ///////////////////////////////////////////////////////////////////////////////
+        node* Find(int x){
+            if(nodes_temp[x]->get()==x){
+                return nodes_temp[x];
+            }
+            return Find(nodes_temp[x]->get());
+        }
+        void Union(int x,int y){
+            node* fx= Find(x);
+            node* fy= Find(y);
+            nodes_temp[fx->get()]=fy;
+        }
         void kruskal(){
             if(nodes.size()==0){
                 cout << "No hay nodos en el grafo :(" << endl;
@@ -677,6 +688,7 @@ class Graph {
             map<edge*,bool> visitado;
             multimap<E,edge*> aristas;
             for (ni=nodes.begin();ni!=nodes.end();++ni){
+                nodes_temp.push_back(*ni);
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
                     if(visitado.find((*ei))->second!=true){
                         visitado[(*ei)]=true;
@@ -684,19 +696,19 @@ class Graph {
                     }
                 }
             }
-            map<node*,bool> visitado_nodo;
+            visitado.clear();
             int contador=0;
             for(typename multimap<E,edge*>::iterator it=aristas.begin();it!=aristas.end();++it){
                 if(contador==nodes.size()-1){
                     break;
                 }
-                if(visitado_nodo.find((*it).second->nodes[0])->second!=true || visitado_nodo.find((*it).second->nodes[1])->second!=true){
-                    visitado_nodo[(*it).second->nodes[0]]=true;
-                    visitado_nodo[(*it).second->nodes[1]]=true;
+                if(Find((*it).second->nodes[0]->get()) != Find((*it).second->nodes[1]->get())){
+                    Union((*it).second->nodes[0]->get(),(*it).second->nodes[1]->get());
                     contador++;
                     cout << (*it).second->nodes[0]->get() << (*it).second->nodes[1]->get() << endl;
                 }
             }
+            nodes_temp.clear();
         }
         void Bipartito(E vertice){
             bool bipartito=true;
@@ -739,9 +751,9 @@ class Graph {
                     }
                 }
             }
-            /*for(typename map<node*,bool>::iterator it=visitado.begin();it!=visitado.end();++it){
+            for(typename map<node*,bool>::iterator it=visitado.begin();it!=visitado.end();++it){
                 cout << (*it).first->get() << (*it).second << endl;
-            }*/
+            }
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
                     if(visitado.find((*ei)->nodes[0])->second==1 && visitado.find((*ei)->nodes[1])->second==1){
