@@ -75,62 +75,62 @@ class Graph {
                 }
                 switch(opcion){
                 case 1:
-                    cout << "Escriba el vertice que desea ingresar: ";
+                    cout << "Escriba el vertice que desea ingresar(Numero): ";
                     cin >> vertice;
                     Insertar_Vertices(0,0,vertice);
                     system("PAUSE");
                     system("cls");
                     break;
                 case 2:
-                    cout << "Escriba el vertice inicial: ";
+                    cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
-                    cout << "Escriba el vertice final: ";
+                    cout << "Escriba el vertice final(Numero): ";
                     cin  >> vertice_final;
-                    cout << "Escriba el peso de la arista: ";
+                    cout << "Escriba el peso de la arista(Numero): ";
                     cin  >> peso;
                     Insertar_Aristas(vertice_inicial,vertice_final,peso);
                     system("PAUSE");
                     system("cls");
                     break;
                 case 3:
-                    cout << "Escriba el vertice que desea eliminar: ";
+                    cout << "Escriba el vertice que desea eliminar(Numero): ";
                     cin  >> vertice;
                     Eliminar_Nodos(vertice);
                     system("PAUSE");
                     system("cls");
                     break;
                 case 4:
-                    cout << "Escriba el vertice inicial: ";
+                    cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
-                    cout << "Escriba el vertice final: ";
+                    cout << "Escriba el vertice final(Numero): ";
                     cin  >> vertice_final;
                     Eliminar_Aristas(vertice_inicial,vertice_final);
                     system("PAUSE");
                     system("cls");
                     break;
                 case 5:
-                    cout << "Escriba el vertice inicial: ";
+                    cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
                     BFS(vertice_inicial);
                     system("PAUSE");
                     system("cls");
                     break;
                 case 6:
-                    cout << "Escriba el vertice inicial: ";
+                    cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
                     DFS(vertice_inicial);
                     system("PAUSE");
                     system("cls");
                     break;
                 case 7:
-                    cout << "Escriba el vertice que desea saber su grado: ";
+                    cout << "Escriba el vertice que desea saber su grado(Numero): ";
                     cin  >> vertice;
                     grado(vertice);
                     system("PAUSE");
                     system("cls");
                     break;
                 case 8:
-                    cout << "Escriba la cota: ";
+                    cout << "Escriba la cota(Numero): ";
                     cin  >> cota;
                     if(cota>=0 && cota<=1){
                         densidad(cota);
@@ -180,7 +180,7 @@ class Graph {
                     break;
                 case 11:
                     if(!dir){
-                        cout << "Escriba el vertice inicial: ";
+                        cout << "Escriba el vertice inicial(Numero): ";
                         cin  >> vertice_inicial;
                         prim(vertice_inicial);
                     }
@@ -201,7 +201,7 @@ class Graph {
                     system("cls");
                     break;
                 case 13:
-                    cout << "Escriba el vertice inicial: ";
+                    cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
                     Bipartito(vertice_inicial);
                     system("PAUSE");
@@ -268,6 +268,10 @@ class Graph {
                     cout << "Uno de los nodos ingresados no existe :(" << endl;
                     return;
             }
+            if(first_node==second_node){
+                cout << "El grafo no acepta bucles" << endl;
+                return;
+            }
             node* nodo=buscar_nodo(first_node);
             if(dir == true){
                 if(fuertemente_conexo){
@@ -285,9 +289,11 @@ class Graph {
             }else{
                 for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
                     if((*ei)->nodes[1]->get()==second_node && (*ei)->nodes[0]->get()==first_node){
+                        cout << "La arista ya existe :(" << endl;
                         return;
                     }
                     else if((*ei)->nodes[1]->get()==first_node && (*ei)->nodes[0]->get()==second_node){
+                        cout << "La arista ya existe :(" << endl;
                         return;
                     }
                 }
@@ -327,7 +333,7 @@ class Graph {
                         ei = nodo->edges.erase(ei);
                         break;
                     }
-                    else if((*ei)->nodes[1]->get()==second_node && (*ei)->nodes[0]->get()==first_node){
+                    else if((*ei)->nodes[1]->get()==first_node && (*ei)->nodes[0]->get()==second_node){
                         ei = nodo->edges.erase(ei);
                         break;
                     }
