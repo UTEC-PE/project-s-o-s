@@ -736,14 +736,21 @@ class Graph {
                         }
                     }
                     else{
-                        if(visitado.find(*ni)->first==*ni){
-                            break;
-                        }
                         if(visitado.find((*ei)->nodes[0])->first!=(*ei)->nodes[0]){
-                        visitado[(*ei)->nodes[0]]=0;
+                            if(visitado.find((*ei)->nodes[1])->second==0){
+                                visitado[(*ei)->nodes[0]]=1;
+                            }
+                            else{
+                                visitado[(*ei)->nodes[0]]=0;
+                            }
                         }
                         else if(visitado.find((*ei)->nodes[1])->first!=(*ei)->nodes[1]){
-                            visitado[(*ei)->nodes[1]]=0;
+                            if(visitado.find((*ei)->nodes[0])->second==0){
+                                visitado[(*ei)->nodes[1]]=1;
+                            }
+                            else{
+                                visitado[(*ei)->nodes[1]]=0;
+                            }
                         }
                     }
                 }
@@ -754,6 +761,10 @@ class Graph {
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
                     if(visitado.find((*ei)->nodes[0])->second==1 && visitado.find((*ei)->nodes[1])->second==1){
+                        bipartito=false;
+                        break;
+                    }
+                    else if(visitado.find((*ei)->nodes[0])->second==0 && visitado.find((*ei)->nodes[1])->second==0){
                         bipartito=false;
                         break;
                     }
