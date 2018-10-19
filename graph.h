@@ -710,7 +710,7 @@ class Graph {
             for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
                 if(dir){
                     visitado[(*ei)->nodes[1]]=1;
-                }{
+                }else{
                     if((*ei)->nodes[0]!=nodo){
                     visitado[(*ei)->nodes[0]]=1;
                     }
