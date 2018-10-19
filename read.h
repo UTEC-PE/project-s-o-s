@@ -47,7 +47,7 @@ class Read {
             system("pause");
             //grafo.print();
             //Pasar nodooooo;
-            grafo.print();
+            grafo.Bipartito();
         };
 
 		graph& getGraph() {
@@ -55,5 +55,4 @@ class Read {
         };
 };
 typedef Read<Traits> read;
-
 #endif

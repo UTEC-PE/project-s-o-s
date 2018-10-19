@@ -79,7 +79,7 @@ class Graph {
                         ei2=ei;
                         break;
                     }
-                    else if((*ei)->nodes[1]->get()==second_node && (*ei)->nodes[0]->get()==first_node){
+                    else if((*ei)->nodes[1]->get()==first_node && (*ei)->nodes[0]->get()==second_node){
                         temp= (*ei);
                         ei = nodo->edges.erase(ei);
                         ei2=ei;
@@ -139,8 +139,7 @@ class Graph {
             }
         };
         ///////////////////////////////////////////////////////////////////////////////
-        bool BFS(){
-            node* nodo = nodes[0];
+        bool BFS(node* nodo){
             queue<node*> cola;
             cola.push(nodo);
             map<E,bool> visitado;
@@ -148,22 +147,40 @@ class Graph {
                 visitado[(*ni)->get()]=false;
             }
             visitado[nodo->get()]=true;
-            do{
-                for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
-                    if(visitado.find((*ei)->nodes[1]->get())->second==false){
-                        visitado[(*ei)->nodes[1]->get()]=true;
-                        cola.push((*ei)->nodes[1]);
+            if(dir==false){
+                do{
+                    for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                        if(visitado.find((*ei)->nodes[1]->get())->second==false){
+                            visitado[(*ei)->nodes[1]->get()]=true;
+                            cola.push((*ei)->nodes[1]);
+                        }
+                        else if(visitado.find((*ei)->nodes[0]->get())->second==false){
+                            visitado[(*ei)->nodes[0]->get()]=true;
+                            cola.push((*ei)->nodes[0]);
+                        }
                     }
-                    else if(visitado.find((*ei)->nodes[0]->get())->second==false){
-                        visitado[(*ei)->nodes[0]->get()]=true;
-                        cola.push((*ei)->nodes[0]);
+                    cout << nodo->get() << " ";
+                    cola.pop();
+                    nodo= cola.front();
+                }
+                while(!cola.empty());
+            }
+            else{
+                do{
+                    for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                        if(visitado.find((*ei)->nodes[1]->get())->second==false){
+                            visitado[(*ei)->nodes[1]->get()]=true;
+                            cola.push((*ei)->nodes[1]);
+                        }
+                    }
+                    cout << nodo->get() << " ";
+                    cola.pop();
+                    if(!cola.empty()){
+                        nodo= cola.front();
                     }
                 }
-                cout << nodo->get() << " ";
-                cola.pop();
-                nodo= cola.front();
+                while(!cola.empty());
             }
-            while(!cola.empty());
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 if(visitado.find((*ni)->get())->second==false){
                     return false;
@@ -302,7 +319,7 @@ class Graph {
         }
         }
         ///////////////////////////////////////////////////////////////////////////////
-        /*void fuertemente_conexo(bool option){
+        void fuertemente_conexo(bool option){
             cout << "Los nodos son: ";
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 cout << (*ni)->get() << " ";
@@ -316,14 +333,14 @@ class Graph {
                     cout << "No es fuertemente conexo" << endl;
                 }
             }else{
-                if(BFS()){
-                    cout << "Es  fuertemente conexo" << endl;
+                if(BFS(nodes.front()) && BFS(nodes.back())){
+                    cout << "Es fuertemente conexo" << endl;
                 }
                 else{
                     cout << "No es fuertemente conexo" << endl;
                 }
             }
-        }*/
+        }
         ///////////////////////////////////////////////////////////////////////////////
         void prim(){
             node* nodo=nodes[0];
@@ -336,21 +353,23 @@ class Graph {
             do{
                 visitado[nodo->get()]=true;
                 for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
-                    if(visitado.find((*ei)->nodes[1]->get())->second==false){
+                    if(visitado.find((*ei)->nodes[1]->get())->second!=true){
                         aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
                     }
-                    else if(visitado.find((*ei)->nodes[0]->get())->second==false){
+                    else if(visitado.find((*ei)->nodes[0]->get())->second!=true){
                         aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
                     }
                 }
-                if(visitado.find((aristas.begin()->second)->nodes[1]->get())->second==false){
+                if(visitado.find((aristas.begin()->second)->nodes[1]->get())->second!=true){
                     nodo=(aristas.begin()->second)->nodes[1];
+                    cout << (aristas.begin()->second)->nodes[0]->get() << (aristas.begin()->second)->nodes[1]->get() << endl;
+                    contador++;
                 }
-                else{
+                else if(visitado.find((aristas.begin()->second)->nodes[0]->get())->second!=true){
                     nodo=(aristas.begin()->second)->nodes[0];
+                    cout << (aristas.begin()->second)->nodes[0]->get() << (aristas.begin()->second)->nodes[1]->get() << endl;
+                    contador++;
                 }
-                contador++;
-                cout << (aristas.begin()->second)->nodes[0]->get() << (aristas.begin()->second)->nodes[1]->get() << endl;
                 aristas.erase(aristas.begin());
             }
             while(contador!=visitado.size()-1);
@@ -367,32 +386,57 @@ class Graph {
                     }
                 }
             }
-            typename multimap<E,edge*>::iterator it=aristas.begin();
-            for(int x=0;x<nodes.size()-1;x++){
-                cout << (*it).second->nodes[0]->get() << (*it).second->nodes[1]->get() << endl;
-                it++;
+            map<node*,bool> visitado_nodo;
+            int contador=0;
+            for(typename multimap<E,edge*>::iterator it=aristas.begin();it!=aristas.end();++it){
+                if(contador==visitado.size()-1){
+                    break;
+                }
+                if(visitado_nodo.find((*it).second->nodes[0])->second!=true || visitado_nodo.find((*it).second->nodes[1])->second!=true){
+                    visitado_nodo[(*it).second->nodes[0]]=true;
+                    visitado_nodo[(*it).second->nodes[1]]=true;
+                    contador++;
+                    cout << (*it).second->nodes[0]->get() << (*it).second->nodes[1]->get() << endl;
+                }
             }
         }
         void Bipartito(){
-            map<edge*,bool> visitado;
-            vector<edge*> aristas;
+            node* nodo=nodes[0];
+            map<node*,bool> visitado;
+            visitado[nodo]=0;
+            for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+                if((*ei)->nodes[0]!=nodo){
+                    visitado[(*ei)->nodes[0]]=1;
+                }
+                else if((*ei)->nodes[1]!=nodo){
+                    visitado[(*ei)->nodes[1]]=1;
+                }
+            }
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
-                    if(visitado.find(*ei)->second==false){
-                        visitado[*ei]=true;
-                        aristas.push_back(*ei);
+                    if(visitado.find(*ni)->first==*ni){
+                        break;
+                    }
+                    if(visitado.find((*ei)->nodes[0])->first==(*ei)->nodes[0]){
+                         visitado[(*ei)->nodes[1]]=0;
+                    }
+                    else if(visitado.find((*ei)->nodes[1])->first==(*ei)->nodes[1]){
+                        visitado[(*ei)->nodes[0]]=0;
                     }
                 }
             }
-            map<node*,bool> visitado_nodo;
-            for(typename vector<edge*>::iterator it=aristas.begin();it!=aristas.end();++it){
-                cout << (*it)->nodes[0]->get() << (*it)->nodes[1]->get() << endl;
-                if(visitado_nodo.find((*it)->nodes[1])->second==false || visitado_nodo.find((*it)->nodes[0])->second==false){
-                        visitado_nodo[(*it)->nodes[1]]=true;
-                        visitado_nodo[(*it)->nodes[0]]=true;
+            /*for(typename map<node*,bool>::iterator it=visitado.begin();it!=visitado.end();++it){
+                cout << (*it).first->get() << (*it).second << endl;
+            }*/
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
+                    if(visitado.find((*ei)->nodes[0])->second==1 && visitado.find((*ei)->nodes[1])->second==1){
+                        bipartito=false;
+                        break;
+                    }
                 }
-                else{
-                    bipartito=false;
+                if(!bipartito){
+                    break;
                 }
             }
             if(bipartito){
