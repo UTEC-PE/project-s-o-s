@@ -240,8 +240,10 @@ class Graph {
                     if((*ei)->nodes[0]->get()==first_node && (*ei)->nodes[1]->get()==second_node){
                         return *ei;
                     }
-                    else if((*ei)->nodes[1]->get()==first_node && (*ei)->nodes[0]->get()==second_node){
+                    if(!dir){
+                        if((*ei)->nodes[1]->get()==first_node && (*ei)->nodes[0]->get()==second_node){
                         return *ei;
+                        }
                     }
                 }
             }
