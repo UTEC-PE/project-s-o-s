@@ -5,6 +5,7 @@
 #include <iostream>
 #include "node.h"
 #include "edge.h"
+#include <limits.h>
 //////////////////////////////////////
 #include <queue>
 #include <stack>
@@ -67,7 +68,7 @@ class Graph {
                 cout << "15) Salir" <<endl;
                 cout << "Eliga el numero respectivo a lo que desea hacer:";
                 cin >> var;
-								printf("\033c"); 
+								printf("\033c");
                 try{
                     opcion=stoi(var);
                 }
@@ -786,6 +787,73 @@ class Graph {
                 cout <<endl;
             }
         }
+				///////////////////////////////////////////////////////////////////////////////
+				void Greedy_BFS(E vertice_inicial, E vertice_final){
+					node* nodo=buscar_nodo(vertice_inicial);
+					if(nodo==nullptr){
+									cout << "El nodo ingresado no existe :(" << endl;
+									return;
+					}
+					cout << "Las aristas del arbol de minima expansion segun Greedy_BFS desde " << vertice_inicial
+					<< " hasta " << vertice_final << " son: " << endl;
+					map<E,bool> visitado;
+					int contador=0;
+					multimap<E,edge*> aristas;
+					for (ni=nodes.begin();ni!=nodes.end();++ni){
+							visitado[(*ni)->get()]=false;
+					}
+					do{
+							visitado[nodo->get()]=true;
+							for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+									if(visitado.find((*ei)->nodes[1]->get())->second!=true){
+											aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
+									}
+									else if(visitado.find((*ei)->nodes[0]->get())->second!=true){
+											aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
+									}
+							}
+							if(visitado.find((aristas.begin()->second)->nodes[1]->get())->second!=true){
+									nodo=(aristas.begin()->second)->nodes[1];
+									cout << (aristas.begin()->second)->nodes[0]->get() << (aristas.begin()->second)->nodes[1]->get() << endl;
+									if((aristas.begin()->second)->nodes[1]->get()==vertice_final){
+										return;
+									}
+									contador++;
+							}
+							else if(visitado.find((aristas.begin()->second)->nodes[0]->get())->second!=true){
+									nodo=(aristas.begin()->second)->nodes[0];
+									cout << (aristas.begin()->second)->nodes[0]->get() << (aristas.begin()->second)->nodes[1]->get() << endl;
+									if((aristas.begin()->second)->nodes[0]->get()==vertice_final){
+										return;
+									}
+									contador++;
+							}
+							aristas.erase(aristas.begin());
+					}
+					while(contador!=visitado.size()-1);
+					cout << "No se encontro el camino :( " << endl;
+				};
+				void Floyd_Warshall(){
+						 int matrix[nodes.size()][nodes.size()]={0};
+						 for(int i=0;i<nodes.size();i++){
+							 for(int j=0;j<nodes.size();j++){
+								 if(i!=j){
+									 	matrix[i][j]=INT_MAX;
+								 }
+								}
+						 }
+						 /*for (ni=nodes.begin();ni!=nodes.end();++ni){
+                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
+									 	 if((*ei)->nodes[0]->get()!=(*ni)->get()){
+											 	matrix[(*ni)->get()][(*ei)->nodes[0]->get()]=(*ei)->get();
+										 }
+										 else if((*ei)->nodes[1]->get()!=(*ni)->get()){
+											 	matrix[(*ni)->get()][(*ei)->nodes[1]->get()]=(*ei)->get();
+										 }
+                 }
+             }*/
+				}
+
     private:
         NodeSeq nodes;
         NodeSeq nodes_temp;
