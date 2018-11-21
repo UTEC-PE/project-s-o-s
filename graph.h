@@ -5,6 +5,7 @@
 #include <iostream>
 #include "node.h"
 #include "edge.h"
+#include <limits.h>
 //////////////////////////////////////
 #include <queue>
 #include <stack>
@@ -65,9 +66,9 @@ class Graph {
                 cout << "13) Bipartito" <<endl;
                 cout << "14) Imprimir Grafo" <<endl;
                 cout << "15) Salir" <<endl;
-                cout << "16) Dijkstra" <<endl;
                 cout << "Eliga el numero respectivo a lo que desea hacer:";
                 cin >> var;
+								printf("\033c");
                 try{
                     opcion=stoi(var);
                 }
@@ -79,8 +80,7 @@ class Graph {
                     cout << "Escriba el vertice que desea ingresar(Numero): ";
                     cin >> vertice;
                     Insertar_Vertices(0,0,vertice);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 2:
                     cout << "Escriba el vertice inicial(Numero): ";
@@ -90,15 +90,13 @@ class Graph {
                     cout << "Escriba el peso de la arista(Numero): ";
                     cin  >> peso;
                     Insertar_Aristas(vertice_inicial,vertice_final,peso);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 3:
                     cout << "Escriba el vertice que desea eliminar(Numero): ";
                     cin  >> vertice;
                     Eliminar_Nodos(vertice);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 4:
                     cout << "Escriba el vertice inicial(Numero): ";
@@ -106,29 +104,25 @@ class Graph {
                     cout << "Escriba el vertice final(Numero): ";
                     cin  >> vertice_final;
                     Eliminar_Aristas(vertice_inicial,vertice_final);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 5:
                     cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
                     BFS(vertice_inicial);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 6:
                     cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
                     DFS(vertice_inicial);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 7:
                     cout << "Escriba el vertice que desea saber su grado(Numero): ";
                     cin  >> vertice;
                     grado(vertice);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 8:
                     cout << "Escriba la cota(Numero): ";
@@ -139,8 +133,7 @@ class Graph {
                     else{
                         cout << "La cota ingresada no es valida" << endl;
                     }
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 9:
                     if(!dir){
@@ -166,8 +159,7 @@ class Graph {
                     else{
                         cout << "El grafo es dirigido, eliga la opcion �fuertemente conexo?" << endl;
                     }
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 10:
                     if(dir){
@@ -176,8 +168,7 @@ class Graph {
                     else{
                         cout << "El grafo no es dirigido, eliga la opcion �conexo?" << endl;
                     }
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 11:
                     if(!dir){
@@ -188,8 +179,7 @@ class Graph {
                     else{
                         cout << "Prim no se aplica para grafos dirigidos" << endl;
                     }
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 12:
                     if(!dir){
@@ -198,33 +188,28 @@ class Graph {
                     else{
                         cout << "Kruskal no se aplica para grafos dirigidos" << endl;
                     }
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 13:
                     cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
                     Bipartito(vertice_inicial);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 14:
                     print();
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
-
-                    case 15:
-                        int nodo;
-                        cin >> nodo;
-                        dijkstra(nodo);
-
+								case 15:
+										int nodo=0;
+										cin>>nodo;
+										dijkstra(nodo);
                 default:
-                    system("cls");
+                    printf("\033c");
                     break;
                 }
             }
-            while(opcion!=15);
+            while(opcion!=16);
         }
         node* buscar_nodo(E nodo){
             if(fuertemente_conexo){
@@ -247,8 +232,10 @@ class Graph {
                     if((*ei)->nodes[0]->get()==first_node && (*ei)->nodes[1]->get()==second_node){
                         return *ei;
                     }
-                    else if((*ei)->nodes[1]->get()==first_node && (*ei)->nodes[0]->get()==second_node){
+                    if(!dir){
+                        if((*ei)->nodes[1]->get()==first_node && (*ei)->nodes[0]->get()==second_node){
                         return *ei;
+                        }
                     }
                 }
             }
@@ -804,23 +791,71 @@ class Graph {
                 cout <<endl;
             }
         }
+				E menor(map<E,bool> visitados, map<E,E> tabla)
+				{
+					typename map<E,E>::iterator menorIT = tabla.begin();
+					E min = INT_MAX;
+					E index=nodes.size()+1;
+					for(menorIT = tabla.begin();menorIT != tabla.end();++menorIT)
+					{
+						if(min>=(*menorIT).second && visitados[(*menorIT).first]==0){
+							min=(*menorIT).second;
+							index=(*menorIT).first;
+						}
+					}
+					return index;
+				}
+				map<E,E> dijkstra(int Original)
+				{
+					map<E,bool> visitados;
+					map<E,E> tabla;
+					vector<E> listanodos;
+					E min;
+					for(ni=nodes.begin();ni!=nodes.end();++ni)
+					{
+						tabla.insert(pair<E,E>((*ni)->get(),INT_MAX));
+						visitados.insert(pair<E,bool>((*ni)->get(),0));
+						listanodos.push_back((*ni)->get());
+					}
+					tabla[Original]=0;
+					visitados[Original]=1;
+					auto node = buscar_nodo(Original);
+					while(!listanodos.empty())
+					{
+						for(ei=node->edges.begin();ei!=node->edges.end();++ei)
+						{
+							if((*ei)->nodes[1]!=node && tabla[node->get()]!=INT_MAX && (*ei)->get()+tabla[node->get()]<tabla[(*ei)->nodes[1]->get()])
+							{
+									tabla[(*ei)->nodes[1]->get()]=(*ei)->get()+tabla[node->get()];
+							}
+							else if((*ei)->nodes[0]!=node && tabla[node->get()]!=INT_MAX && (*ei)->get()+tabla[node->get()]<tabla[(*ei)->nodes[0]->get()])
+							{
+								tabla[(*ei)->nodes[0]->get()]=(*ei)->get()+tabla[node->get()];
+							}
 
-        map<E,int> dijkstra(int node)
-        {
-            Node* nodo = buscar_nodo(node);
-            map<Node*, int> caminos,visitado;
-            int tabla[nodes.size()][nodes.size()];
-            for(int x=0; x<nodes.size(); x++)
-            {
-                for(int y=0; x<nodes.size(); y++)
-                {
-                    tabla[x][y] = INTMAX_MAX;
-                    cout<<tabla[x][y]<<" ";
-                }
-                cout<<endl;
-            }
-            tabla[nodo->get()][nodo->get()] = 0;
-        };
+						}
+						min = menor(visitados,tabla);
+						if(min>nodes.size()){
+							break;
+						}
+						node = buscar_nodo(min);
+						visitados[node->get()] = 1;
+						listanodos.pop_back();
+				  }
+
+					for(typename map<E,E>::iterator iterador=tabla.begin();iterador!=tabla.end();++iterador)
+					{
+						if((*iterador).second==INT_MAX)
+						{
+								cout<<(*iterador).first<<": "<<"INF"<<endl;
+						}
+						else
+						{
+						cout<<(*iterador).first<<": "<<(*iterador).second<<endl;
+					  }
+					}
+					return tabla;
+				}
     private:
         NodeSeq nodes;
         NodeSeq nodes_temp;

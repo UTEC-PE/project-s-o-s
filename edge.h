@@ -10,18 +10,18 @@ class Edge {
         typedef typename G::E E;
         typedef typename G::node node;
         node* nodes[2];
-        Edge(node* first_node, node* second_node,E data,bool dir){
+        Edge(node* first_node, node* second_node,E data){
             nodes[0]=first_node;
             nodes[1]=second_node;
             this->data=data;
-            this->dir=dir;
+        };
+        ~Edge(){
         };
         E get(){
             return data;
         }
     private:
         E data;
-        bool dir;
 };
 
 #endif
