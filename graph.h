@@ -840,18 +840,48 @@ class Graph {
 								 if(i!=j){
 									 	matrix[i][j]=INT_MAX;
 								 }
-								}
+                            }
 						 }
-						 /*for (ni=nodes.begin();ni!=nodes.end();++ni){
-                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
-									 	 if((*ei)->nodes[0]->get()!=(*ni)->get()){
-											 	matrix[(*ni)->get()][(*ei)->nodes[0]->get()]=(*ei)->get();
-										 }
-										 else if((*ei)->nodes[1]->get()!=(*ni)->get()){
-											 	matrix[(*ni)->get()][(*ei)->nodes[1]->get()]=(*ei)->get();
-										 }
-                 }
-             }*/
+						 for (ni=nodes.begin();ni!=nodes.end();++ni){
+                            for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
+                                if((*ei)->nodes[0]->get()!=(*ni)->get()){
+                                    matrix[(*ni)->get()][(*ei)->nodes[0]->get()]=(*ei)->get();
+                                }
+                                else if((*ei)->nodes[1]->get()!=(*ni)->get()){
+                                    matrix[(*ni)->get()][(*ei)->nodes[1]->get()]=(*ei)->get();
+                                }
+                            }
+                        }
+                        int dt=0;
+                        for(int k = 0; k < nodes.size(); k++){
+                            for(int i = 0; i < nodes.size(); i++){
+                                for(int j = 0; j < nodes.size(); j++){
+                                    if( matrix[k][j]!=INT_MAX && matrix[i][k]!=INT_MAX){
+                                        dt = matrix[i][k] + matrix[k][j];
+                                    }
+                                    else{
+                                        dt = INT_MAX;
+                                    }
+                                    if(matrix[i][j] > dt){
+                                        matrix[i][j] = dt;
+                                    }
+                                }
+                            }
+                        }
+
+
+
+                        for(int i=0;i<nodes.size();i++){
+							 for(int j=0;j<nodes.size();j++){
+								 if(matrix[i][j]==INT_MAX){
+									cout << "- ";
+								 }
+								 else{
+                                    cout << matrix[i][j] << " ";
+								 }
+                            }
+                            cout << endl;
+                        }
 				}
 
     private:

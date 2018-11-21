@@ -44,8 +44,8 @@ class Read {
                 grafo.Insertar_Aristas(v_inicial,v_final,peso);
             }
             archivo.close();
-						grafo.Floyd_Warshall();
-						//grafo.Inicio();
+            grafo.Floyd_Warshall();
+            //grafo.Inicio();
         };
 
 		graph& getGraph() {
