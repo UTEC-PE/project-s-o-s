@@ -18,6 +18,5 @@ int main(int argc, char *argv[]) {
     grafo.Eliminar_Nodos('0');
     grafo.print();*/
     read leer;
-    system("PAUSE");
     return EXIT_SUCCESS;
 }

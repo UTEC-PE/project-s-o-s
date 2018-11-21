@@ -58,8 +58,8 @@ class Graph {
                 cout << "6) DFS(Busqueda en profundidad)" << endl;
                 cout << "7) Grado de un vertice" <<endl;
                 cout << "8) Densidad del grafo" <<endl;
-                cout << "9) ¿Grafo Conexo?" <<endl;
-                cout << "10) ¿Grafo Fuertemenente Conexo?" <<endl;
+                cout << "9) ï¿½Grafo Conexo?" <<endl;
+                cout << "10) ï¿½Grafo Fuertemenente Conexo?" <<endl;
                 cout << "11) Prim" <<endl;
                 cout << "12) Kruskal" <<endl;
                 cout << "13) Bipartito" <<endl;
@@ -67,6 +67,7 @@ class Graph {
                 cout << "15) Salir" <<endl;
                 cout << "Eliga el numero respectivo a lo que desea hacer:";
                 cin >> var;
+								printf("\033c"); 
                 try{
                     opcion=stoi(var);
                 }
@@ -78,8 +79,7 @@ class Graph {
                     cout << "Escriba el vertice que desea ingresar(Numero): ";
                     cin >> vertice;
                     Insertar_Vertices(0,0,vertice);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 2:
                     cout << "Escriba el vertice inicial(Numero): ";
@@ -89,15 +89,13 @@ class Graph {
                     cout << "Escriba el peso de la arista(Numero): ";
                     cin  >> peso;
                     Insertar_Aristas(vertice_inicial,vertice_final,peso);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 3:
                     cout << "Escriba el vertice que desea eliminar(Numero): ";
                     cin  >> vertice;
                     Eliminar_Nodos(vertice);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 4:
                     cout << "Escriba el vertice inicial(Numero): ";
@@ -105,29 +103,25 @@ class Graph {
                     cout << "Escriba el vertice final(Numero): ";
                     cin  >> vertice_final;
                     Eliminar_Aristas(vertice_inicial,vertice_final);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 5:
                     cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
                     BFS(vertice_inicial);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 6:
                     cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
                     DFS(vertice_inicial);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 7:
                     cout << "Escriba el vertice que desea saber su grado(Numero): ";
                     cin  >> vertice;
                     grado(vertice);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 8:
                     cout << "Escriba la cota(Numero): ";
@@ -138,8 +132,7 @@ class Graph {
                     else{
                         cout << "La cota ingresada no es valida" << endl;
                     }
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 9:
                     if(!dir){
@@ -163,20 +156,18 @@ class Graph {
                         }
                     }
                     else{
-                        cout << "El grafo es dirigido, eliga la opcion ¿fuertemente conexo?" << endl;
+                        cout << "El grafo es dirigido, eliga la opcion ï¿½fuertemente conexo?" << endl;
                     }
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 10:
                     if(dir){
                         Fuertemente_conexo();
                     }
                     else{
-                        cout << "El grafo no es dirigido, eliga la opcion ¿conexo?" << endl;
+                        cout << "El grafo no es dirigido, eliga la opcion ï¿½conexo?" << endl;
                     }
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 11:
                     if(!dir){
@@ -187,8 +178,7 @@ class Graph {
                     else{
                         cout << "Prim no se aplica para grafos dirigidos" << endl;
                     }
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 12:
                     if(!dir){
@@ -197,23 +187,20 @@ class Graph {
                     else{
                         cout << "Kruskal no se aplica para grafos dirigidos" << endl;
                     }
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 13:
                     cout << "Escriba el vertice inicial(Numero): ";
                     cin  >> vertice_inicial;
                     Bipartito(vertice_inicial);
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 case 14:
                     print();
-                    system("PAUSE");
-                    system("cls");
+										cout << "" << endl;
                     break;
                 default:
-                    system("cls");
+                    printf("\033c");
                     break;
                 }
             }
