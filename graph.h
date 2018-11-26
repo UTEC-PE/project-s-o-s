@@ -856,6 +856,47 @@ class Graph {
 					}
 					return tabla;
 				}
+				map<E,E> Bellman(int nodo)
+				{
+					map<E,E> distancia;
+					map<E,E> visitados;
+					distancia[nodo]=0;
+					auto node = buscar_nodo(nodo);
+					for(ni=nodes.begin();ni!=nodes.end();++ni)
+					{
+						distancia.insert(pair<E,E>((*ni)->get(),INT_MAX));
+					}
+					for(ni=nodes.begin();ni!=nodes.end();++ni)
+					{
+						for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei)
+						{
+							if(distancia[(*ei)->nodes[0]->get()] + (*ei)->get() < distancia[(*ei)->nodes[1]->get()] and distancia[(*ei)->nodes[0]->get()] != INT_MAX)
+							{
+								distancia[(*ei)->nodes[1]->get()] = distancia[(*ei)->nodes[0]->get()] + (*ei)->get();
+							}
+						}
+					}
+					for(ni=nodes.begin();ni!=nodes.end();++ni)
+					{
+						for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei)
+						{
+							if(distancia[(*ei)->nodes[0]->get()] + (*ei)->get() < distancia[(*ei)->nodes[1]->get()])
+							{cout<<"Error";}
+
+						}
+					}
+					for(typename map<E,E>::iterator iterador=distancia.begin();iterador!=distancia.end();++iterador)
+					{
+						if((*iterador).second==INT_MAX)
+						{
+								cout<<(*iterador).first<<": "<<"INF"<<endl;
+						}
+						else
+						{
+						cout<<(*iterador).first<<": "<<(*iterador).second<<endl;
+					  }
+					}
+				}
     private:
         NodeSeq nodes;
         NodeSeq nodes_temp;
