@@ -17,14 +17,28 @@ class Read {
 		Read() {
             // TODO
             int v_inicial,v_final,peso;
+            double p_x,p_y;
+            int n_nodos;
             ////////////////
             string data;
             ifstream archivo("graph.txt");
             archivo >> data;
             graph grafo(stoi(data));
             archivo >> data;
-            for(int x=0;x<stoi(data);x++){
-                grafo.Insertar_Vertices(0,0,x);
+            n_nodos=stoi(data);
+            for(int x=0;x<n_nodos;x++){
+                for(int y=0;y<2;y++){
+                    archivo >> data;
+                    switch(y){
+                    case 0:
+                        p_x=stod(data);
+                        break;
+                    case 1:
+                        p_y=stod(data);
+                        break;
+                    }
+                }
+                grafo.Insertar_Vertices(p_x,p_y,x);
             }
             while (!archivo.eof()) {
                 for(int x=0;x<3;x++){
@@ -44,7 +58,9 @@ class Read {
                 grafo.Insertar_Aristas(v_inicial,v_final,peso);
             }
             archivo.close();
-            grafo.Floyd_Warshall();
+            //grafo.Floyd_Warshall();
+            //grafo.print();
+            grafo.A_star(0,4);
             //grafo.Inicio();
         };
 

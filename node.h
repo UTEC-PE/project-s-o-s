@@ -18,6 +18,12 @@ class Node {
         E get(){
             return data;
         }
+        double getx(){
+            return x;
+        }
+        double gety(){
+            return x;
+        }
         ~Node(){
         };
     private:

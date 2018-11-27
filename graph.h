@@ -10,6 +10,7 @@
 #include <queue>
 #include <stack>
 #include <map>
+#include <math.h>
 using namespace std;
 
 class Traits {
@@ -47,6 +48,7 @@ class Graph {
             int vertice_final=0;
             int peso=0;
             int vertice=0;
+            double p_x,p_y;
             char o='0';
             double cota=0;
             do{
@@ -79,8 +81,12 @@ class Graph {
                 case 1:
                     cout << "Escriba el vertice que desea ingresar(Numero): ";
                     cin >> vertice;
-                    Insertar_Vertices(0,0,vertice);
-										cout << "" << endl;
+                    cout << "Escriba la posicion X: ";
+                    cin >> p_x;
+                    cout << "Escriba la posicion y: ";
+                    cin >> p_y;
+                    Insertar_Vertices(p_x,p_y,vertice);
+                    cout << "" << endl;
                     break;
                 case 2:
                     cout << "Escriba el vertice inicial(Numero): ";
@@ -835,10 +841,15 @@ class Graph {
 				};
 				void Floyd_Warshall(){
 						 int matrix[nodes.size()][nodes.size()]={0};
+						 int matrix2[nodes.size()][nodes.size()]={0};
 						 for(int i=0;i<nodes.size();i++){
 							 for(int j=0;j<nodes.size();j++){
 								 if(i!=j){
 									 	matrix[i][j]=INT_MAX;
+									 	matrix2[i][j]=j;
+								 }
+								 else{
+                                    matrix2[i][j]=INT_MAX;
 								 }
                             }
 						 }
@@ -864,13 +875,17 @@ class Graph {
                                     }
                                     if(matrix[i][j] > dt){
                                         matrix[i][j] = dt;
+                                        if(dt==INT_MAX){
+                                            matrix2[i][j] =INT_MAX;
+                                        }
+                                        else{
+                                            matrix2[i][j] = k;
+                                        }
+
                                     }
                                 }
                             }
                         }
-
-
-
                         for(int i=0;i<nodes.size();i++){
 							 for(int j=0;j<nodes.size();j++){
 								 if(matrix[i][j]==INT_MAX){
@@ -882,8 +897,113 @@ class Graph {
                             }
                             cout << endl;
                         }
-				}
+                        cout << endl;
+                        cout << endl;
+                        for(int i=0;i<nodes.size();i++){
+							 for(int j=0;j<nodes.size();j++){
+								 if(matrix2[i][j]==INT_MAX){
+									cout << "- ";
+								 }
+								 else{
+                                    cout << matrix2[i][j] << " ";
+								 }
+                            }
+                            cout << endl;
+                        }
+				};
 
+                double Distancia_entre(E vertice_inicial, E vertice_final){
+                    int suma=0;
+                    node* nodo=buscar_nodo(vertice_inicial);
+					map<E,bool> visitado;
+					int contador=0;
+					multimap<E,edge*> aristas;
+					for (ni=nodes.begin();ni!=nodes.end();++ni){
+							visitado[(*ni)->get()]=false;
+					}
+					do{
+							visitado[nodo->get()]=true;
+							for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
+									if(visitado.find((*ei)->nodes[1]->get())->second!=true){
+											aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
+									}
+									else if(visitado.find((*ei)->nodes[0]->get())->second!=true){
+											aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
+									}
+							}
+							if(visitado.find((aristas.begin()->second)->nodes[1]->get())->second!=true){
+									nodo=(aristas.begin()->second)->nodes[1];
+									suma+=(aristas.begin()->second)->get();
+									if((aristas.begin()->second)->nodes[1]->get()==vertice_final){
+										return suma;
+									}
+									contador++;
+							}
+							else if(visitado.find((aristas.begin()->second)->nodes[0]->get())->second!=true){
+									nodo=(aristas.begin()->second)->nodes[0];
+									suma+=(aristas.begin()->second)->get();
+									if((aristas.begin()->second)->nodes[0]->get()==vertice_final){
+										return suma;
+									}
+									contador++;
+							}
+							aristas.erase(aristas.begin());
+					}
+					while(contador!=visitado.size()-1);
+                }
+                void A_star(E vertice_inicial, E vertice_final){
+                node* nodo1=buscar_nodo(vertice_inicial);
+                node* nodo2=buscar_nodo(vertice_final);
+                double heuristica[nodes.size()]={0};
+                for(int x=0;x<nodes.size();x++){
+                    heuristica[x]= sqrt(pow(nodes[x]->getx()-nodo2->getx(),2)+pow(nodes[x]->gety()-nodo2->gety(),2));
+                }
+                map<E,vector<double> > matrix;
+                vector<double> temp;
+                temp.push_back(0);
+                temp.push_back(heuristica[0]);
+                temp.push_back(0);
+                matrix.insert(pair<E,vector<double>>(nodo1->get(),temp));
+                temp.clear();
+                multimap<E,node*> menor;
+                menor.insert(pair<E,node*>(0,nodo1));
+                map<E,bool> visitado;
+                node* nodo_temp=menor.begin()->second;
+                while(true){
+                        for(ei=nodo_temp->edges.begin();ei!=nodo_temp->edges.end();++ei){
+                            if(visitado.find((*ei)->nodes[1]->get())->second!=true){
+                                visitado[(*ei)->nodes[1]->get()]=true;
+                                temp.push_back(Distancia_entre(vertice_inicial,(*ei)->nodes[1]->get()));
+                                temp.push_back(heuristica[(*ei)->nodes[1]->get()]+temp[0]);
+                                temp.push_back((*ei)->nodes[0]->get());
+                                matrix.insert(pair<E,vector<double>>((*ei)->nodes[1]->get(),temp));
+                                menor.insert(pair<E,node*>((*ei)->get(),(*ei)->nodes[1]));
+                            }
+                            else if(visitado.find((*ei)->nodes[0]->get())->second!=true){
+                                visitado[(*ei)->nodes[0]->get()]=true;
+                                temp.push_back(Distancia_entre(vertice_inicial,(*ei)->nodes[0]->get()));
+                                temp.push_back(heuristica[(*ei)->nodes[0]->get()]+temp[0]);
+                                temp.push_back((*ei)->nodes[1]->get());
+                                matrix.insert(pair<E,vector<double>>((*ei)->nodes[0]->get(),temp));
+                                menor.insert(pair<E,node*>((*ei)->get(),(*ei)->nodes[0]));
+                            }
+                        }
+                        temp.clear();
+                        menor.erase(menor.begin());
+                        nodo_temp=menor.begin()->second;
+                        if(menor.begin()->second==nodo2){
+                            break;
+                        }
+                }
+                ///////////////////////////////////////////
+                for (typename map<E,vector<double> >::iterator it=matrix.begin(); it!=matrix.end(); ++it){
+                    cout << (*it).first << endl;
+                    for (vector<double>::iterator ite=(*it).second.begin(); ite!=(*it).second.end(); ++ite){
+                        cout << *ite << "  ";
+                    }
+                    cout << endl;
+                }
+                };
     private:
         NodeSeq nodes;
         NodeSeq nodes_temp;
