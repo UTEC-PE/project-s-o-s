@@ -4,6 +4,7 @@
 #include "graph.h"
 #include <string>
 
+
 /**
  * Clase de ayuda para leer el grafo desde un archivo,
  * no es necesario que la utilicen, podrían implementar su lector
@@ -14,6 +15,7 @@ class Read {
 	typedef typename G::N N;
 	typedef typename G::E E;
 	public:
+
 		Read() {
             // TODO
             int v_inicial,v_final,peso;
@@ -58,9 +60,11 @@ class Read {
                 grafo.Insertar_Aristas(v_inicial,v_final,peso);
             }
             archivo.close();
-            //grafo.Floyd_Warshall();
+            //grafo.hilos();
             //grafo.print();
-            grafo.A_star(0,4);
+						//grafo.A_star(0,8);
+						grafo.Greedy_BFS(0,8);
+            //grafo.A_star(0,4);
             //grafo.Inicio();
         };
 

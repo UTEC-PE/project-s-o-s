@@ -3,6 +3,7 @@
 #include <vector>
 #include <list>
 #include <iostream>
+#include <thread>
 #include "node.h"
 #include "edge.h"
 #include <limits.h>
@@ -912,98 +913,185 @@ class Graph {
                         }
 				};
 
-                double Distancia_entre(E vertice_inicial, E vertice_final){
-                    int suma=0;
-                    node* nodo=buscar_nodo(vertice_inicial);
-					map<E,bool> visitado;
-					int contador=0;
-					multimap<E,edge*> aristas;
-					for (ni=nodes.begin();ni!=nodes.end();++ni){
-							visitado[(*ni)->get()]=false;
+
+								E menor(map<E,bool> visitados, map<E,double> tabla)
+				{
+					typename map<E,double>::iterator menorIT = tabla.begin();
+					E min = INT_MAX;
+					E index=nodes.size()+1;
+					for(menorIT = tabla.begin();menorIT != tabla.end();++menorIT)
+					{
+						if(min>=(*menorIT).second && visitados[(*menorIT).first]==0){
+							min=(*menorIT).second;
+							index=(*menorIT).first;
+						}
 					}
-					do{
-							visitado[nodo->get()]=true;
-							for(ei=nodo->edges.begin();ei!=nodo->edges.end();++ei){
-									if(visitado.find((*ei)->nodes[1]->get())->second!=true){
-											aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
-									}
-									else if(visitado.find((*ei)->nodes[0]->get())->second!=true){
-											aristas.insert(pair<E,edge*>((*ei)->get(),*ei));
-									}
-							}
-							if(visitado.find((aristas.begin()->second)->nodes[1]->get())->second!=true){
-									nodo=(aristas.begin()->second)->nodes[1];
-									suma+=(aristas.begin()->second)->get();
-									if((aristas.begin()->second)->nodes[1]->get()==vertice_final){
-										return suma;
-									}
-									contador++;
-							}
-							else if(visitado.find((aristas.begin()->second)->nodes[0]->get())->second!=true){
-									nodo=(aristas.begin()->second)->nodes[0];
-									suma+=(aristas.begin()->second)->get();
-									if((aristas.begin()->second)->nodes[0]->get()==vertice_final){
-										return suma;
-									}
-									contador++;
-							}
-							aristas.erase(aristas.begin());
+					return index;
+				}
+				map<E,double> dijkstra(int Original)
+				{
+					map<E,bool> visitados;
+					map<E,double> tabla;
+					vector<E> listanodos;
+					E min;
+					for(ni=nodes.begin();ni!=nodes.end();++ni)
+					{
+						tabla.insert(pair<E,double>((*ni)->get(),INT_MAX));
+						visitados.insert(pair<E,bool>((*ni)->get(),0));
+						listanodos.push_back((*ni)->get());
 					}
-					while(contador!=visitado.size()-1);
-                }
-                void A_star(E vertice_inicial, E vertice_final){
-                node* nodo1=buscar_nodo(vertice_inicial);
-                node* nodo2=buscar_nodo(vertice_final);
-                double heuristica[nodes.size()]={0};
-                for(int x=0;x<nodes.size();x++){
-                    heuristica[x]= sqrt(pow(nodes[x]->getx()-nodo2->getx(),2)+pow(nodes[x]->gety()-nodo2->gety(),2));
-                }
-                map<E,vector<double> > matrix;
-                vector<double> temp;
-                temp.push_back(0);
-                temp.push_back(heuristica[0]);
-                temp.push_back(0);
-                matrix.insert(pair<E,vector<double>>(nodo1->get(),temp));
-                temp.clear();
-                multimap<E,node*> menor;
-                menor.insert(pair<E,node*>(0,nodo1));
-                map<E,bool> visitado;
-                node* nodo_temp=menor.begin()->second;
-                while(true){
-                        for(ei=nodo_temp->edges.begin();ei!=nodo_temp->edges.end();++ei){
-                            if(visitado.find((*ei)->nodes[1]->get())->second!=true){
-                                visitado[(*ei)->nodes[1]->get()]=true;
-                                temp.push_back(Distancia_entre(vertice_inicial,(*ei)->nodes[1]->get()));
-                                temp.push_back(heuristica[(*ei)->nodes[1]->get()]+temp[0]);
-                                temp.push_back((*ei)->nodes[0]->get());
-                                matrix.insert(pair<E,vector<double>>((*ei)->nodes[1]->get(),temp));
-                                menor.insert(pair<E,node*>((*ei)->get(),(*ei)->nodes[1]));
-                            }
-                            else if(visitado.find((*ei)->nodes[0]->get())->second!=true){
-                                visitado[(*ei)->nodes[0]->get()]=true;
-                                temp.push_back(Distancia_entre(vertice_inicial,(*ei)->nodes[0]->get()));
-                                temp.push_back(heuristica[(*ei)->nodes[0]->get()]+temp[0]);
-                                temp.push_back((*ei)->nodes[1]->get());
-                                matrix.insert(pair<E,vector<double>>((*ei)->nodes[0]->get(),temp));
-                                menor.insert(pair<E,node*>((*ei)->get(),(*ei)->nodes[0]));
-                            }
-                        }
-                        temp.clear();
-                        menor.erase(menor.begin());
-                        nodo_temp=menor.begin()->second;
-                        if(menor.begin()->second==nodo2){
-                            break;
-                        }
-                }
-                ///////////////////////////////////////////
-                for (typename map<E,vector<double> >::iterator it=matrix.begin(); it!=matrix.end(); ++it){
-                    cout << (*it).first << endl;
-                    for (vector<double>::iterator ite=(*it).second.begin(); ite!=(*it).second.end(); ++ite){
-                        cout << *ite << "  ";
-                    }
-                    cout << endl;
-                }
-                };
+					tabla[Original]=0;
+					visitados[Original]=1;
+					auto node = buscar_nodo(Original);
+					while(!listanodos.empty())
+					{
+						for(ei=node->edges.begin();ei!=node->edges.end();++ei)
+						{
+							if((*ei)->nodes[1]!=node && tabla[node->get()]!=INT_MAX && (*ei)->get()+tabla[node->get()]<tabla[(*ei)->nodes[1]->get()])
+							{
+									tabla[(*ei)->nodes[1]->get()]=(*ei)->get()+tabla[node->get()];
+							}
+							else if((*ei)->nodes[0]!=node && tabla[node->get()]!=INT_MAX && (*ei)->get()+tabla[node->get()]<tabla[(*ei)->nodes[0]->get()])
+							{
+								tabla[(*ei)->nodes[0]->get()]=(*ei)->get()+tabla[node->get()];
+							}
+
+						}
+						min = menor(visitados,tabla);
+						if(min>nodes.size()){
+							break;
+						}
+						node = buscar_nodo(min);
+						visitados[node->get()] = 1;
+						listanodos.pop_back();
+				  }
+
+					for(typename map<E,double>::iterator iterador=tabla.begin();iterador!=tabla.end();++iterador)
+					{
+						if((*iterador).second==INT_MAX)
+						{
+								cout<<(*iterador).first<<": "<<"INF"<<endl;
+						}
+						else
+						{
+						cout<<(*iterador).first<<": "<<(*iterador).second<<endl;
+					  }
+					}
+					return tabla;
+				}
+				map<E,E> Bellman(int nodo)
+				{
+					map<E,E> distancia;
+					map<E,E> visitados;
+					distancia[nodo]=0;
+					auto node = buscar_nodo(nodo);
+					for(ni=nodes.begin();ni!=nodes.end();++ni)
+					{
+						distancia.insert(pair<E,E>((*ni)->get(),INT_MAX));
+					}
+					for(ni=nodes.begin();ni!=nodes.end();++ni)
+					{
+						for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei)
+						{
+							if(distancia[(*ei)->nodes[0]->get()] + (*ei)->get() < distancia[(*ei)->nodes[1]->get()] and distancia[(*ei)->nodes[0]->get()] != INT_MAX)
+							{
+								distancia[(*ei)->nodes[1]->get()] = distancia[(*ei)->nodes[0]->get()] + (*ei)->get();
+							}
+						}
+					}
+					for(ni=nodes.begin();ni!=nodes.end();++ni)
+					{
+						for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei)
+						{
+							if(distancia[(*ei)->nodes[0]->get()] + (*ei)->get() < distancia[(*ei)->nodes[1]->get()])
+							{cout<<"Error";}
+
+						}
+					}
+					for(typename map<E,E>::iterator iterador=distancia.begin();iterador!=distancia.end();++iterador)
+					{
+						if((*iterador).second==INT_MAX)
+						{
+								cout<<(*iterador).first<<": "<<"INF"<<endl;
+						}
+						else
+						{
+						cout<<(*iterador).first<<": "<<(*iterador).second<<endl;
+					  }
+					}
+				}
+
+		void A_star(E Original, E vertice_final){
+			node* nodo2=buscar_nodo(vertice_final);
+			double heuristica[nodes.size()]={0};
+			for(int x=0;x<nodes.size();x++){
+					heuristica[x]= sqrt(pow(nodes[x]->getx()-nodo2->getx(),2)+pow(nodes[x]->gety()-nodo2->gety(),2));
+			}
+			map<E,bool> visitados;
+			map<E,double> tabla;
+			int aux[nodes.size()]={0};
+			vector<E> listanodos;
+			E min;
+			for(ni=nodes.begin();ni!=nodes.end();++ni)
+			{
+				tabla.insert(pair<E,E>((*ni)->get(),INT_MAX));
+				visitados.insert(pair<E,bool>((*ni)->get(),0));
+				listanodos.push_back((*ni)->get());
+			}
+			tabla[Original]=0;
+			visitados[Original]=1;
+			auto node = buscar_nodo(Original);
+			while(!listanodos.empty())
+			{
+				for(ei=node->edges.begin();ei!=node->edges.end();++ei)
+				{
+					if((*ei)->nodes[1]!=node && tabla[node->get()]!=INT_MAX && (*ei)->get()+tabla[node->get()]<tabla[(*ei)->nodes[1]->get()])
+					{
+							tabla[(*ei)->nodes[1]->get()]=(*ei)->get()+tabla[node->get()];
+							aux[(*ei)->nodes[1]->get()]=(*ei)->nodes[0]->get();
+							if((*ei)->nodes[1]->get()==vertice_final){
+								break;
+							}
+					}
+					else if((*ei)->nodes[0]!=node && tabla[node->get()]!=INT_MAX && (*ei)->get()+tabla[node->get()]<tabla[(*ei)->nodes[0]->get()])
+					{
+						tabla[(*ei)->nodes[0]->get()]=(*ei)->get()+tabla[node->get()];
+						aux[(*ei)->nodes[0]->get()]=(*ei)->nodes[1]->get();
+						if((*ei)->nodes[0]->get()==vertice_final){
+							break;
+						}
+					}
+				}
+				min = menor(visitados,tabla);
+				if(min>nodes.size()){
+					break;
+				}
+				node = buscar_nodo(min);
+				visitados[node->get()] = 1;
+				listanodos.pop_back();
+			}
+			int bika=tabla.rbegin()->first;
+			for(int x=0; x<nodes.size();++x)
+			{
+				cout <<aux[bika] << bika << endl;
+				bika=aux[bika];
+				if(bika==Original){
+					break;
+				}
+			}
+		};
+		void hilos2(int nodo_inicial,int nodo_final){
+					A_star(nodo_inicial,nodo_final);
+					cout << endl;
+		};
+		void hilos(){
+				thread threads[3];
+				for(int x=0;x<3;++x){
+						cout << "thread" << x <<": " << endl;
+						threads[x]=thread(&Graph::hilos2,this,0,8);
+						threads[x].join();
+				}
+		};
     private:
         NodeSeq nodes;
         NodeSeq nodes_temp;
